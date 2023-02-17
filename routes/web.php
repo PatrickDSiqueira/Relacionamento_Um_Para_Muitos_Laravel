@@ -17,7 +17,7 @@ use App\Categoria;
 Route::get('/categorias', function () {
     $cats = Categoria::all();
     if (count($cats) === 0) {
-        echo "Você não possui categorias cadastradas";
+        echo "<h4>Você não possui categorias cadastradas</h4>";
     } else {
         foreach ($cats as $cat) {
             echo "<p>" . $cat->id . " - " . $cat->nome . "</p>";
@@ -41,4 +41,30 @@ Route::get('/produtos', function () {
             echo "</tr>";
         }
     }
+});
+
+
+Route::get('/categorias/produtos', function () {
+    $cats = Categoria::all();
+    if (count($cats) === 0) {
+        echo "<h4>Você não possui categorias cadastradas</h4>";
+    } else {
+        foreach ($cats as $cat) {
+            echo "<p>" . $cat->id . " - " . $cat->nome . "</p>";
+            $produtos = $cat->produtos;
+            if (count($produtos)>0){
+                echo"<ul>";
+                    foreach ($produtos as $p){
+                        echo "<li>".$p->nome."</li>";
+                    }
+                echo"</ul>";
+            }
+        }
+    }
+});
+
+Route::get("categoriasprodutos/json",function (){
+//    $cats = Categoria::all();  // Lazy Loading
+    $cats = Categoria::with('produtos')->get(); // Eager loading
+    return $cats -> toJson();
 });
