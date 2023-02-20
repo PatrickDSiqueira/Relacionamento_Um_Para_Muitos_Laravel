@@ -80,9 +80,26 @@ Route::get("/adicionarproduto",function (){
     return $p->toJson();
 });
 
-Route::get("/removerproduto",function (){
+Route::get("/removerprodutocategoria",function (){
     $p = Produto::find(1);
     $p-> categoria() -> dissociate();
     $p -> save();
     return $p->toJson();
+});
+
+Route::get('/adicionarproduto/{$catid}',function ($catid){
+   $cat = Categoria::find($catid);
+
+   $p = new Produto();
+    $p -> nome = "Produto 1";
+    $p -> estoque = 10;
+    $p -> preco = 150;
+
+    if (isset($cat)){
+        $cat ->produtos()->save($p);
+    }
+
+    $cat->load('produtos');
+    return $cat->toJson();
+
 });
