@@ -68,3 +68,21 @@ Route::get("categoriasprodutos/json",function (){
     $cats = Categoria::with('produtos')->get(); // Eager loading
     return $cats -> toJson();
 });
+
+Route::get("/adicionarproduto",function (){
+    $cat= Categoria::find(1);
+    $p = new Produto();
+    $p-> nome = "Meu novo produto";
+    $p-> estoque = 10;
+    $p-> preco = 19;
+    $p-> categoria() -> associate($cat);
+    $p -> save();
+    return $p->toJson();
+});
+
+Route::get("/removerproduto",function (){
+    $p = Produto::find(1);
+    $p-> categoria() -> dissociate();
+    $p -> save();
+    return $p->toJson();
+});
